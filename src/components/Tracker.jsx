@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
+import { FaTimes } from 'react-icons/fa';
 import { capitalize } from './Capitalize.jsx';
 
 const Tracker = () => {
   const [pokemonName, setPokemonName] = useState('');
   const [encounterData, setEncounterData] = useState([]);
   const [error, setError] = useState(null);
+
+  const clearData = () => {
+    setEncounterData([]);
+    setError(null);
+  };
 
   const fetchPokemon = async () => {
     try {
@@ -49,28 +55,38 @@ const Tracker = () => {
   };
 
   return (
-    <div className="p-5 bg-gray-100 min-h-screen flex flex-col items-center">
-      <h1 className="text-3xl font-bold text-red-600 mb-5">PokéTracker</h1>
+    <div className="p-5 bg-[#f0f0f0] min-h-screen flex flex-col items-center">
+      <h1 className="text-3xl font-bold text-[#ee1515] mb-5">PokéTracker</h1>
       <input
         type="text"
         placeholder="Enter Pokémon Name"
         value={pokemonName}
         onChange={(e) => setPokemonName(e.target.value)}
-        className="w-full max-w-md p-2 border-2 border-gray-300 rounded-md mb-4 text-lg focus:border-red-600 focus:outline-none"
+        className="w-full max-w-md p-2 border-2 border-[#222224] rounded-md mb-4 text-lg focus:border-[#ee1515] focus:outline-none"
       />
       <button
         onClick={fetchPokemon}
-        className="px-6 py-2 border-none rounded-md bg-red-600 text-white text-lg cursor-pointer transition duration-300 ease-in-out hover:bg-red-700"
+        className="px-6 py-2 border-none rounded-md bg-[#ee1515] text-white text-lg cursor-pointer transition duration-300 ease-in-out hover:bg-[#ee1515]/80"
       >
         Search
       </button>
-      {error && <p className="text-red-600 mt-4">{error}</p>}
+      {error && <p className="text-[#222224] mt-4">{error}</p>}
       <div className="w-full max-w-4xl mt-8">
-        <h2 className="text-2xl font-semibold text-red-600 mb-4">Encounters</h2>
-        {encounterData.length === 0 && <p className="text-gray-600">No encounter data available.</p>}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-semibold text-[#ee1515]">Encounters</h2>
+          {encounterData.length > 0 && (
+            <button
+              onClick={clearData}
+              className="p-2 text-[#222224] hover:text-[#ee1515] transition-colors"
+            >
+              <FaTimes />
+            </button>
+          )}
+        </div>
+        {encounterData.length === 0 && <p className="text-[#222224]">No encounter data available.</p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {encounterData.map((encounter, index) => (
-            <div key={index} className="bg-white p-4 border border-gray-200 rounded-lg shadow-md">
+            <div key={index} className="bg-[#f0f0f0] p-4 border border-[#222224] rounded-lg shadow-md">
               <p className="font-medium mb-2">Location: {capitalize(encounter.location_area.name.replace(/-/g, ' '))}</p>
               <ul className="list-none">
                 {encounter.version_details.map((detail, idx) => (
