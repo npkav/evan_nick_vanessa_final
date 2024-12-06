@@ -22,7 +22,7 @@ const Navbar = () => {
         <ul className="hidden md:flex gap-10">
           <li>
             <a
-              href="#technologies"
+              href="#pokedex"
               className="text-lg opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#f0f0f0]"
             >
               PokéDex
@@ -30,7 +30,7 @@ const Navbar = () => {
           </li>
           <li>
             <a
-              href="#projects"
+              href="#pokebuilder"
               className="text-lg opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#f0f0f0]"
             >
               PokéBuilder
@@ -38,7 +38,7 @@ const Navbar = () => {
           </li>
           <li>
             <a
-              href="#contact"
+              href="#poketracker"
               className="text-lg opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#f0f0f0]"
             >
               PokéTracker
@@ -46,7 +46,7 @@ const Navbar = () => {
           </li>
           <li>
             <a
-              href="#contact"
+              href="#pokecounter"
               className="text-lg opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#f0f0f0]"
             >
               PokéCounter
@@ -68,29 +68,38 @@ const Navbar = () => {
           <ul className="flex flex-col items-center gap-4">
             <li>
               <a
-                href="#technologies"
+                href="#pokedex"
                 className="text-lg opacity-40 transition-all duration-300 hover:opacity-100"
                 onClick={toggleMenu}
               >
-                [technologies]
+                PokéDex
               </a>
             </li>
             <li>
               <a
-                href="#projects"
+                href="#pokebuilder"
                 className="text-lg opacity-40 transition-all duration-300 hover:opacity-100"
                 onClick={toggleMenu}
               >
-                [projects]
+                PokéBuilder
               </a>
             </li>
             <li>
               <a
-                href="#contact"
+                href="#poketracker"
                 className="text-lg opacity-40 transition-all duration-300 hover:opacity-100"
                 onClick={toggleMenu}
               >
-                [contact]
+                PokéTracker
+              </a>
+            </li>
+            <li>
+              <a
+                href="#pokecounter"
+                className="text-lg opacity-40 transition-all duration-300 hover:opacity-100"
+                onClick={toggleMenu}
+              >
+                PokéCounter
               </a>
             </li>
           </ul>
