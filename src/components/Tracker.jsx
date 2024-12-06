@@ -49,42 +49,48 @@ const Tracker = () => {
   };
 
   return (
-    <div>
-      <h1>PokéTracker</h1>
+    <div className="p-5 bg-gray-100 min-h-screen flex flex-col items-center">
+      <h1 className="text-3xl font-bold text-red-600 mb-5">PokéTracker</h1>
       <input
         type="text"
         placeholder="Enter Pokémon Name"
         value={pokemonName}
         onChange={(e) => setPokemonName(e.target.value)}
+        className="w-full max-w-md p-2 border-2 border-gray-300 rounded-md mb-4 text-lg focus:border-red-600 focus:outline-none"
       />
-      <button onClick={fetchPokemon}>Search</button>
-      {error && <p>{error}</p>}
-      <div>
-        <h2>Encounters</h2>
-        {encounterData.length === 0 && <p>No encounter data available.</p>}
-        {encounterData.map((encounter, index) => (
-          <div key={index}>
-            <p>Location: {capitalize(encounter.location_area.name.replace(/-/g, ' '))}</p>
-            <ul>
-              {encounter.version_details.map((detail, idx) => (
-                <li key={idx}>
-                  Game: {capitalize(detail.version.name.replace(/-/g, ' '))}
-                  <ul>
-                    {detail.encounter_details.map((encDetail, edx) => (
-                      <li key={edx}>
-                        Chance: {encDetail.chance}%
-                        <br />
-                        Method: {capitalize(encDetail.method.name.replace(/-/g, ' '))}
-                        <br />
-                        Levels: {encDetail.min_level} to {encDetail.max_level}
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+      <button
+        onClick={fetchPokemon}
+        className="px-6 py-2 border-none rounded-md bg-red-600 text-white text-lg cursor-pointer transition duration-300 ease-in-out hover:bg-red-700"
+      >
+        Search
+      </button>
+      {error && <p className="text-red-600 mt-4">{error}</p>}
+      <div className="w-full max-w-4xl mt-8">
+        <h2 className="text-2xl font-semibold text-red-600 mb-4">Encounters</h2>
+        {encounterData.length === 0 && <p className="text-gray-600">No encounter data available.</p>}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {encounterData.map((encounter, index) => (
+            <div key={index} className="bg-white p-4 border border-gray-200 rounded-lg shadow-md">
+              <p className="font-medium mb-2">Location: {capitalize(encounter.location_area.name.replace(/-/g, ' '))}</p>
+              <ul className="list-none">
+                {encounter.version_details.map((detail, idx) => (
+                  <li key={idx} className="mb-3">
+                    <p className="font-semibold">Game: {capitalize(detail.version.name.replace(/-/g, ' '))}</p>
+                    <ul className="pl-4">
+                      {detail.encounter_details.map((encDetail, edx) => (
+                        <li key={edx} className="mb-2">
+                          <p>Chance: {encDetail.chance}%</p>
+                          <p>Method: {capitalize(encDetail.method.name.replace(/-/g, ' '))}</p>
+                          <p>Levels: {encDetail.min_level} to {encDetail.max_level}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
