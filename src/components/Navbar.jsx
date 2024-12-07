@@ -8,10 +8,16 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  /* scroll to section function */
   const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    element?.scrollIntoView({ behavior: 'smooth' });
-    setIsMenuOpen(false); // Close mobile menu after clicking
+    const targetElement = document.getElementById(sectionId);
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    setIsMenuOpen(false);
   };
 
   return (
