@@ -23,11 +23,21 @@ function App() {
       />
       <main className="relative z-10 flex flex-col items-center px-4 md:px-8 lg:px-16">
         <Navbar />
-        <Hero />
-        <Dex />
-        <Builder />
-        <Tracker />
-        <Counter />
+        <div id="home">
+          <Hero />
+        </div>
+        <div id="dex">
+          <Dex />
+        </div>
+        <div id="builder">
+          <Builder />
+        </div>
+        <div id="tracker">
+          <Tracker />
+        </div>
+        <div id="counter">
+          <Counter />
+        </div>
       </main>
     </div>
   )
