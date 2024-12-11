@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        pokeball: {
+          DEFAULT: '#ee1515',
+          hover: '#d10808',
+        },
+      },
+    },
   },
   plugins: [],
 }
