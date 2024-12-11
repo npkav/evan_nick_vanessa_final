@@ -1,6 +1,26 @@
 import React, {useState, useEffect} from 'react';
 import {capitalize} from './Capitalize';
 
+import bugIcon from '../assets/types/bug_icon.png'
+import darkIcon from '../assets/types/dark_icon.png'
+import dragonIcon from '../assets/types/dragon_icon.png'
+import electricIcon from '../assets/types/electric_icon.png'
+import fairyIcon from '../assets/types/fairy_icon.png'
+import fightingIcon from '../assets/types/fighting_icon.png'
+import fireIcon from '../assets/types/fire_icon.png'
+import flyingIcon from '../assets/types/flying_icon.png'
+import ghostIcon from '../assets/types/ghost_icon.png'
+import grassIcon from '../assets/types/grass_icon.png'
+import groundIcon from '../assets/types/ground_icon.png'
+import iceIcon from '../assets/types/ice_icon.png'
+import normalIcon from '../assets/types/normal_icon.png'
+import poisonIcon from '../assets/types/poison_icon.png'
+import psychicIcon from '../assets/types/psychic_icon.png'
+import rockIcon from '../assets/types/rock_icon.png'
+import steelIcon from '../assets/types/steel_icon.png'
+import stellarIcon from '../assets/types/stellar_icon.png'
+import waterIcon from '../assets/types/water_icon.png'
+
 const Builder = () => {
 
   const [team, setTeam] = useState([])
@@ -45,6 +65,7 @@ const Builder = () => {
           name: data.name,
           image: data.sprites.front_default,
           shinyImage: data.sprites.front_shiny,
+          types: data.types.map((type) => type.type.name),
         });
       })
       .catch(() => {
@@ -52,6 +73,31 @@ const Builder = () => {
       });
   }, [teamSearch]);
 
+  const typeIcon = {
+    bug: bugIcon,
+    dark: darkIcon,
+    dragon: dragonIcon,
+    electric: electricIcon,
+    fairy: fairyIcon,
+    fighting: fightingIcon,
+    fire: fireIcon,
+    flying: flyingIcon,
+    ghost: ghostIcon,
+    grass: grassIcon,
+    ground: groundIcon,
+    ice: iceIcon,
+    normal: normalIcon,
+    poison: poisonIcon,
+    psychic: psychicIcon,
+    rock: rockIcon,
+    steel: steelIcon,
+    stellar: stellarIcon,
+    water: waterIcon,
+  }
+
+  const getType = (type) => {
+    return typeIcon[type];
+  };
   return (
     <div className="mt-[80px] flex flex-col justify-center items-center">
         <h1 className="text-center text-3xl font-semibold">PokéBuilder</h1>
@@ -107,6 +153,17 @@ const Builder = () => {
                   placeItems: 'center',
                 }}
               >
+
+                <div style={{ position: 'absolute', top: '5px', left: '5px' }}>
+                  {pokemon.types.slice(0, 2).map((type, i) => (
+                    <img
+                      key={i}
+                      src={getType((type))}
+                      alt={type}
+                      style={{ width: '25px', height: '25px', marginBottom: i === 0 ? '5px' : '0' }}
+                    />
+                  ))}
+                </div>
 
                 <img
                   src={pokemon.isShiny ? pokemon.shinyImage : pokemon.image}
