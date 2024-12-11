@@ -1,0 +1,83 @@
+/* colors for all pokemon types and game titles */
+
+/* type colors: */
+.type-normal { background-color: #A8A77A; }
+.type-fire { background-color: #EE8130; }
+.type-water { background-color: #6390F0; }
+.type-grass { background-color: #7AC74C; }
+.type-electric { background-color: #F7D02C; }
+.type-ice { background-color: #96D9D6; }
+.type-fighting { background-color: #C22E28; }
+.type-poison { background-color: #A33EA1; }
+.type-ground { background-color: #E2BF65; }
+.type-flying { background-color: #A98FF3; }
+.type-psychic { background-color: #F95587; }
+.type-bug { background-color: #A6B91A; }
+.type-rock { background-color: #B6A136; }
+.type-ghost { background-color: #735797; }
+.type-dragon { background-color: #6F35FC; }
+.type-dark { background-color: #705746; }
+.type-steel { background-color: #B7B7CE; }
+.type-fairy { background-color: #D685AD; }
+
+/* generation colors: */
+/* gen i: */
+.gen-i-red { background-color: #ff1111; }
+.gen-i-blue { background-color: #1111ff; }
+.gen-i-yellow { background-color: #ffd733; }
+
+/* gen ii: */
+.gen-ii-gold { background-color: #daa520; }
+.gen-ii-silver { background-color: #c0c0c0; }
+.gen-ii-crystal { background-color: #4fd9ff; }
+
+/* gen iii: */
+.gen-iii-ruby { background-color: #a00000; }
+.gen-iii-sapphire { background-color: #0000a0; }
+.gen-iii-emerald { background-color: #00a000; }
+
+.gen-iii-firered { background-color: #ff7327; }
+.gen-iii-leafgreen { background-color: #00dd00; }
+
+.gen-iii-colloseum { background-color: #b6cae4; }
+.gen-iii-x-gale-of-darkness { background-color: #604e82; }
+
+/* gen iv: */
+.gen-iv-diamond { background-color: #aaaaff; }
+.gen-iv-pearl { background-color: #ffaaaa; }
+.gen-iv-platinum { background-color: #999999; }
+
+.gen-iv-heartgold { background-color: #b69e00; }
+.gen-iv-soulsilver { background-color: #c0c0e1; }
+
+/* gen v: */
+.gen-v-black { background-color: #444444; }
+.gen-v-white { background-color: #e1e1e1; }
+
+/* gen vi: */
+.gen-vi-x { background-color: #6376b8; }
+.gen-vi-y { background-color: #ed5540; }
+
+.gen-vi-omega-ruby { background-color: #cf3025; }
+.gen-vi-alpha-sapphire { background-color: #1768d1; }
+
+/* gen vii: */
+.gen-vii-sun { background-color: #f1912b; }
+.gen-vii-moon { background-color: #5599ca; }
+
+.gen-vii-ultra-sun { background-color: #ec5d2e; }
+.gen-vii-ultra-moon { background-color: #1f62a3; }
+
+/* gen viii: */
+.gen-viii-sword { background-color: #00d1f6; }
+.gen-viii-shield { background-color: #9e2306; }
+
+.gen-viii-brilliant-diamond { background-color: #afede4; }
+.gen-viii-shining-pearl { background-color: #e3b6df; }
+
+/* gen ix: */
+.gen-ix-scarlet { background-color: #c91421; }
+.gen-ix-violet { background-color: #632ea6; }
+
+
+/* source: https://www.epidemicjohto.com/t882-type-colors-hex-colors */
