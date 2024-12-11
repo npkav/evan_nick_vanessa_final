@@ -53,21 +53,23 @@ const Builder = () => {
   }, [teamSearch]);
 
   return (
-    <div className="mt-[80px]">
+    <div className="mt-[80px] flex flex-col justify-center items-center">
         <h1 className="text-center text-3xl font-semibold">PokéBuilder</h1>
 
-      <div>
+      <div className="flex flex-col justify-center items-center">
         <input
           type="text"
           placeholder="Search Pokémon"
           onChange={(e) => setSearch(e.target.value)}
+          className="p-2 border border-gray-300 rounded mb-4"
         />
 
         {teamPokemon && (
-          <div>
+          <div className="text-center">
             <img src={teamPokemon.image} alt={teamPokemon.name}/>
             <h3>{teamPokemon.name}</h3>
-            <button onClick={() => addTeam(teamPokemon)}>Add to Team</button>
+            <button onClick={() => addTeam(teamPokemon)}
+              className="mt-2 p-2 bg-red-500 text-white rounded">Add to Team</button>
           </div>
 
         )}
@@ -76,19 +78,22 @@ const Builder = () => {
 
       {teamWarn && <p>{teamWarn}</p>}
 
-      <div>
+      <div className="text-center">
         <h2>Your Team</h2>
 
-        <div
+        <div className="text-center"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '10px',
+            justifyItems: 'center',
           }}
         >
 
           {team.length === 0 ? (
+            <div className="flex justify-center items-center col-span-3">
             <p>Your team is empty. Search up a Pokémon to add to your team!</p>
+            </div>
           ) : (
             team.map((pokemon, index) => (
               <div
