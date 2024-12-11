@@ -174,12 +174,12 @@ const Builder = () => {
                 <button onClick={() => shinyToggle(index)}
                   style={{
                     position: 'absolute',
-                    top: '5px',
-                    right: '5px',
+                    top: '4px',
+                    right: '4px',
                     background: 'rgba(0, 0, 0, 0.8)',
                     border: '1px solid #ccc',
                     borderRadius: '50%',
-                    padding: '5px',
+                    padding: '1px',
                   }}>✨</button>
 
                 <h4>{pokemon.name}</h4>
