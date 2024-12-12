@@ -26,7 +26,9 @@ const Builder = () => {
   const [team, setTeam] = useState([])
   const [teamSearch, setSearch] = useState('')
   const [teamWarn, setWarn] = useState('')
-  const [teamPokemon, setPokemon] = useState(null);
+  const [teamPokemon, setPokemon] = useState(null)
+  const [teamSaved, setSaved] = useState([])
+  const [teamId, setId] = useState('');
 
   const addTeam = (pokemon) => {
     if (team.length >= 6) {
@@ -36,23 +38,23 @@ const Builder = () => {
         ...pokemon,
         name: capitalize(pokemon.name),
         isShiny: false,
-      };
+      }
       setTeam([...team, capPokemon])
-      setWarn('');
+      setWarn('')
     }
   };
 
   const removeTeam = (index) => {
-    setTeam(team.filter((_, i) => i !== index));
+    setTeam(team.filter((_, i) => i !== index))
   };
 
   const shinyToggle = (index) => {
     setTeam(team.map((pokemon, i) => {
       if (i === index) {
-        return {...pokemon, isShiny: !pokemon.isShiny};
+        return {...pokemon, isShiny: !pokemon.isShiny}
       }
       return pokemon;
-    }));
+    }))
   };
 
   useEffect(() => {
@@ -66,12 +68,24 @@ const Builder = () => {
           image: data.sprites.front_default,
           shinyImage: data.sprites.front_shiny,
           types: data.types.map((type) => type.type.name),
-        });
+        })
       })
       .catch(() => {
         setPokemon(null)
       });
   }, [teamSearch]);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/teams')
+      .then((response) => response.json())
+      .then((data) => {
+        setSaved(data)
+      })
+      .catch((error) => {
+        setWarn('Oops! There was an error loading your saved teams. Please try again!')
+        console.error('Error:', error)
+      })
+  }, []);
 
   const typeIcon = {
     bug: bugIcon,
@@ -93,11 +107,67 @@ const Builder = () => {
     steel: steelIcon,
     stellar: stellarIcon,
     water: waterIcon,
-  }
+  };
 
   const getType = (type) => {
     return typeIcon[type];
   };
+
+  const teamSave = () => {
+    if (team.length === 0) {
+      setWarn('Please add some Pokémon to your team before saving!')
+      return;
+    }
+
+    fetch('http://localhost:5000/teams')
+    .then((response) => response.json())
+    .then((data) => {
+      const nextId = data.length > 0 ? `team ${data.length + 1}` : "team 1"
+      const teamNew = {
+        id: nextId,
+        team: team,
+      };
+
+
+      fetch('http://localhost:5000/teams', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(teamNew),
+      })
+        .then((response) => response.json())
+        .then(() => {
+          setWarn(`Team saved successfully as ${nextId}!`);
+          setSaved([...teamSaved, teamNew]);
+        })
+        .catch((error) => {
+          setWarn('Oops! There was an error saving your team. Please try again!');
+          console.error('Error:', error);
+        });
+    })
+      .catch((error) => {
+        setWarn('Oops! There was an error loading your teams. Please try again!');
+        console.error('Error:', error);
+      });
+  };
+
+  const teamLoad = () => {
+    if (!teamId) {
+      setWarn('Please select a team to load!')
+      return;
+    };
+
+    const teamSelect = teamSaved.find((team) => team.id === teamId);
+
+    if (teamSelect) {
+      setTeam(teamSelect.team)
+      setWarn(`Team ${teamId} successfully loaded!`)
+    } else {
+      setWarn('Team not found!')
+    }
+  };
+
   return (
     <div className="mt-[80px] flex flex-col justify-center items-center">
         <h1 className="text-center text-3xl font-semibold">PokéBuilder</h1>
@@ -184,10 +254,40 @@ const Builder = () => {
 
                 <h4>{pokemon.name}</h4>
                 <button onClick={() => removeTeam(index)}>X</button>
-
               </div>
             ))
           )}
+          </div>
+          
+          <div className="mt-4 flex w-full max-w-sm justify-between items-center">
+          <div className="flex gap-4">
+            <button
+              onClick={teamSave}
+              className="mt-2 p-2 bg-red-500 text-white rounded"
+            >Save Team</button>
+          
+          <div>
+            <h2>Select a Saved Team</h2>
+            <select
+              value={teamId}
+              onChange={(e) => setId(e.target.value)}
+              className="p-2 border border-gray-300 rounded"
+            >
+
+              <option value="">Select a team...</option>
+              {teamSaved.map((savedTeam) => (
+                <option key={savedTeam.id} value={savedTeam.id}>
+                  {savedTeam.id}
+                </option>
+              ))}
+            </select>
+          </div>
+
+            <button
+              onClick={teamLoad}
+              className="mt-2 p-2 bg-red-500 text-white rounded"
+            >Load Team</button>
+          </div>
         </div>
       </div>
     </div>
