@@ -12,7 +12,7 @@ const Counter = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl p-6 my-8 bg-[#f0f0f0] rounded-lg border-2 border-[#222224] relative">
+    <div className="w-[50%] max-w-[400px] p-6 my-8 bg-[#f0f0f0] rounded-lg border-2 border-[#222224] relative mt-40">
       <h2 className="text-3xl font-bold mb-4">PokéCounter</h2>
       <p className="text-4xl font-semibold mb-6">{count}</p>
       <div className="flex gap-4 mb-6">

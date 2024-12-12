@@ -1,40 +1,35 @@
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  /* scroll to section function */
-  const scrollToSection = (sectionId) => {
-    const targetElement = document.getElementById(sectionId);
-    if (targetElement) {
-      targetElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
+  const handleNavigation = (path) => {
+    navigate(path);
     setIsMenuOpen(false);
   };
 
   return (
     <nav className="fixed top-0 z-10 flex w-full flex-col items-center justify-between border-b-2 border-b-[#222224] bg-[#ee1515] px-16 py-6 text-white backdrop-blur-md">
       <div className="flex w-full items-center justify-between md:justify-evenly">
-        <button
-          onClick={() => scrollToSection('home')}
+        <Link
+          to="/"
           className="text-3xl font-semibold opacity-80 transition-all duration-300 hover:opacity-100"
         >
           PokéMaster
-        </button>
+        </Link>
 
         {/* regular navigation */}
         <ul className="hidden md:flex gap-10">
           <li>
             <button
-              onClick={() => scrollToSection('dex')}
+              onClick={() => handleNavigation('/dex')}
               className="text-lg opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#f0f0f0]"
             >
               PokéDex
@@ -42,7 +37,7 @@ const Navbar = () => {
           </li>
           <li>
             <button
-              onClick={() => scrollToSection('builder')}
+              onClick={() => handleNavigation('/builder')}
               className="text-lg opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#f0f0f0]"
             >
               PokéBuilder
@@ -50,7 +45,7 @@ const Navbar = () => {
           </li>
           <li>
             <button
-              onClick={() => scrollToSection('tracker')}
+              onClick={() => handleNavigation('/tracker')}
               className="text-lg opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#f0f0f0]"
             >
               PokéTracker
@@ -58,7 +53,7 @@ const Navbar = () => {
           </li>
           <li>
             <button
-              onClick={() => scrollToSection('counter')}
+              onClick={() => handleNavigation('/counter')}
               className="text-lg opacity-40 transition-all duration-300 hover:opacity-100 hover:text-[#f0f0f0]"
             >
               PokéCounter
@@ -80,7 +75,7 @@ const Navbar = () => {
           <ul className="flex flex-col items-center gap-4">
             <li>
               <button
-                onClick={() => scrollToSection('dex')}
+                onClick={() => handleNavigation('/dex')}
                 className="text-lg opacity-40 transition-all duration-300 hover:opacity-100"
               >
                 PokéDex
@@ -88,7 +83,7 @@ const Navbar = () => {
             </li>
             <li>
               <button
-                onClick={() => scrollToSection('builder')}
+                onClick={() => handleNavigation('/builder')}
                 className="text-lg opacity-40 transition-all duration-300 hover:opacity-100"
               >
                 PokéBuilder
@@ -96,7 +91,7 @@ const Navbar = () => {
             </li>
             <li>
               <button
-                onClick={() => scrollToSection('tracker')}
+                onClick={() => handleNavigation('/tracker')}
                 className="text-lg opacity-40 transition-all duration-300 hover:opacity-100"
               >
                 PokéTracker
@@ -104,7 +99,7 @@ const Navbar = () => {
             </li>
             <li>
               <button
-                onClick={() => scrollToSection('counter')}
+                onClick={() => handleNavigation('/counter')}
                 className="text-lg opacity-40 transition-all duration-300 hover:opacity-100"
               >
                 PokéCounter
