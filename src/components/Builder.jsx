@@ -1,8 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {capitalize} from './Capitalize';
-
-// Please note that for the JSON server, you must use the default port of 3000 as the code was written with this intent.
-
 import bugIcon from '../assets/types/bug_icon.png'
 import darkIcon from '../assets/types/dark_icon.png'
 import dragonIcon from '../assets/types/dragon_icon.png'
@@ -32,21 +29,73 @@ const Builder = () => {
   const [teamSaved, setSaved] = useState([])
   const [teamId, setId] = useState('');
 
-  const addTeam = (pokemon) => {
-    if (team.length >= 6) {
-      setWarn('Oops! Your team is already full! Please remove a Pokémon before you add a new one!')
-    } else {
-      const capPokemon = {
-        ...pokemon,
-        name: capitalize(pokemon.name),
-        isShiny: false,
-      }
-      setTeam([...team, capPokemon])
-      setWarn('')
-    }
+  const typeIcon = {
+    bug: bugIcon,
+    dark: darkIcon,
+    dragon: dragonIcon,
+    electric: electricIcon,
+    fairy: fairyIcon,
+    fighting: fightingIcon,
+    fire: fireIcon,
+    flying: flyingIcon,
+    ghost: ghostIcon,
+    grass: grassIcon,
+    ground: groundIcon,
+    ice: iceIcon,
+    normal: normalIcon,
+    poison: poisonIcon,
+    psychic: psychicIcon,
+    rock: rockIcon,
+    steel: steelIcon,
+    stellar: stellarIcon,
+    water: waterIcon,
   };
 
-  // We use PATCH instead of DELETE since we are modifying existing data and not deleting the entire team.
+  const getType = (type) => {
+    return typeIcon[type];
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (teamSearch === '') return;
+    
+    const capSearch = teamSearch.toLowerCase()
+    fetch(`https://pokeapi.co/api/v2/pokemon/${capSearch}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const pokemon = {
+          name: capitalize(data.name),
+          image: data.sprites.front_default,
+          shinyImage: data.sprites.front_shiny,
+          types: data.types.map((type) => type.type.name),
+          isShiny: false,
+        }
+        
+        if (team.length >= 6) {
+          setWarn('Oops! Your team is already full! Please remove a Pokémon before you add a new one!')
+        } else {
+          setTeam([...team, pokemon])
+          setWarn('')
+        }
+        setSearch('')
+      })
+      .catch(() => {
+        setWarn('No Pokémon found!')
+      });
+  };
+
+  useEffect(() => {
+    fetch('http://localhost:3000/teams')
+      .then((response) => response.json())
+      .then((data) => {
+        setSaved(data)
+      })
+      .catch((error) => {
+        setWarn('Oops! There was an error loading your saved teams. Please try again!')
+        console.error('Error:', error)
+      })
+  }, []);
+
   const removeTeam = (index) => {
     if (teamId) {
       const accessedTeam = teamSaved.find((savedTeam) => savedTeam.id === teamId);
@@ -95,62 +144,6 @@ const Builder = () => {
       }
       return pokemon;
     }))
-  };
-
-  useEffect(() => {
-    if (teamSearch === '') return;
-    const capSearch = teamSearch.toLowerCase()
-    fetch(`https://pokeapi.co/api/v2/pokemon/${capSearch}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setPokemon({
-          name: data.name,
-          image: data.sprites.front_default,
-          shinyImage: data.sprites.front_shiny,
-          types: data.types.map((type) => type.type.name),
-        })
-      })
-      .catch(() => {
-        setPokemon(null)
-      });
-  }, [teamSearch]);
-
-  useEffect(() => {
-    fetch('http://localhost:3000/teams')
-      .then((response) => response.json())
-      .then((data) => {
-        setSaved(data)
-      })
-      .catch((error) => {
-        setWarn('Oops! There was an error loading your saved teams. Please try again!')
-        console.error('Error:', error)
-      })
-  }, []);
-
-  const typeIcon = {
-    bug: bugIcon,
-    dark: darkIcon,
-    dragon: dragonIcon,
-    electric: electricIcon,
-    fairy: fairyIcon,
-    fighting: fightingIcon,
-    fire: fireIcon,
-    flying: flyingIcon,
-    ghost: ghostIcon,
-    grass: grassIcon,
-    ground: groundIcon,
-    ice: iceIcon,
-    normal: normalIcon,
-    poison: poisonIcon,
-    psychic: psychicIcon,
-    rock: rockIcon,
-    steel: steelIcon,
-    stellar: stellarIcon,
-    water: waterIcon,
-  };
-
-  const getType = (type) => {
-    return typeIcon[type];
   };
 
   const teamSave = () => {
@@ -236,129 +229,121 @@ const Builder = () => {
   };
 
   return (
-    <div className="mt-[80px] flex flex-col justify-center items-center">
-        <h1 className="text-center text-3xl font-semibold">PokéBuilder</h1>
+    <div className="w-full max-w-4xl p-6 my-8 bg-[#f0f0f0] rounded-lg border-2 border-[#222224] relative mt-28">
+      <h1 className="text-3xl font-bold mb-6">PokéBuilder</h1>
 
-      <div className="flex flex-col justify-center items-center">
-        <input
-          type="text"
-          placeholder="Search Pokémon"
-          onChange={(e) => setSearch(e.target.value)}
-          className="p-2 border border-gray-300 rounded mb-4"
-        />
-
-        {teamPokemon && (
-          <div className="text-center">
-            <img src={teamPokemon.image} alt={teamPokemon.name}/>
-            <h3>{teamPokemon.name}</h3>
-            <button onClick={() => addTeam(teamPokemon)}
-              className="mt-2 p-2 bg-red-500 text-white rounded">Add to Team</button>
-          </div>
-
-        )}
-        {!teamPokemon && teamSearch && <p>No Pokémon found!</p>}
+      <div className="mb-4">
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <input
+            type="text"
+            value={teamSearch}
+            placeholder="Enter Pokémon name..."
+            onChange={(e) => setSearch(e.target.value)}
+            className="p-2 border rounded-lg flex-1"
+          />
+          <button 
+            type="submit"
+            className="px-4 py-2 bg-[#ee1515] text-white rounded-lg opacity-40 hover:opacity-100 transition-all duration-300"
+          >
+            Add to Team
+          </button>
+        </form>
       </div>
 
-      {teamWarn && <p>{teamWarn}</p>}
+      {teamWarn && (
+        <p className="text-center text-red-500 mb-4">{teamWarn}</p>
+      )}
 
-      <div className="text-center">
-        <h2>Your Team</h2>
+      <div className="mb-6">
+        <h2 className="text-2xl font-semibold mb-4">Your Team</h2>
 
-        <div className="text-center"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '10px',
-            justifyItems: 'center',
-          }}
-        >
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {team.length === 0 ? (
-            <div className="flex justify-center items-center col-span-3">
-            <p>Your team is empty. Search up a Pokémon to add to your team!</p>
-            </div>
+            <p className="col-span-full text-center py-8">
+              Your team is empty. Search up a Pokémon to add to your team!
+            </p>
           ) : (
             team.map((pokemon, index) => (
               <div
                 key={index}
-                style={{
-                  border: '1px solid #ccc',
-                  background: 'rgba(255, 255, 255, 0.8)',
-                  padding: '10px',
-                  textAlign: 'center',
-                  position: 'relative',
-                  placeItems: 'center',
-                }}
+                className="relative p-4 bg-white rounded-lg border-2 border-[#222224]"
               >
-
-                <div style={{ position: 'absolute', top: '5px', left: '5px' }}>
+                <div className="absolute top-2 left-2 flex flex-col gap-1">
                   {pokemon.types.slice(0, 2).map((type, i) => (
                     <img
                       key={i}
-                      src={getType((type))}
+                      src={getType(type)}
                       alt={type}
-                      style={{ width: '25px', height: '25px', marginBottom: i === 0 ? '5px' : '0' }}
+                      className="w-6 h-6"
                     />
                   ))}
                 </div>
 
+                <button 
+                  onClick={() => shinyToggle(index)}
+                  className="absolute top-2 right-2 bg-black/80 text-white p-1 rounded-full hover:bg-black/60 transition-colors"
+                >
+                  ✨
+                </button>
+
                 <img
                   src={pokemon.isShiny ? pokemon.shinyImage : pokemon.image}
                   alt={pokemon.name}
-                  style={{width:'100px'}}
+                  className="w-32 h-32 mx-auto"
                 />
 
-                <button onClick={() => shinyToggle(index)}
-                  style={{
-                    position: 'absolute',
-                    top: '4px',
-                    right: '4px',
-                    background: 'rgba(0, 0, 0, 0.8)',
-                    border: '1px solid #ccc',
-                    borderRadius: '50%',
-                    padding: '1px',
-                  }}>✨</button>
-
-                <h4>{pokemon.name}</h4>
-                <button onClick={() => removeTeam(index)}>X</button>
+                <h4 className="text-lg capitalize mt-2 mb-3">{pokemon.name}</h4>
+                
+                <button 
+                  onClick={() => removeTeam(index)}
+                  className="absolute bottom-2 right-2 text-red-500 hover:text-red-700 font-bold"
+                >
+                  ✕
+                </button>
               </div>
             ))
           )}
-          </div>
-          
-          <div className="mt-4 flex w-full max-w-sm justify-between items-center">
-          <div className="flex gap-4">
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
+        <button
+          onClick={teamSave}
+          className="px-4 py-2 bg-[#ee1515] text-white rounded-lg opacity-40 hover:opacity-100 transition-all duration-300"
+        >
+          Save Team
+        </button>
+
+        <div className="flex flex-col items-center gap-2">
+          <select
+            value={teamId}
+            onChange={(e) => setId(e.target.value)}
+            className="p-2 border rounded-lg w-full"
+          >
+            <option value="">Select a team...</option>
+            {teamSaved.map((savedTeam) => (
+              <option key={savedTeam.id} value={savedTeam.id}>
+                {savedTeam.id}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex gap-2">
             <button
-              onClick={teamSave}
-              className="mt-2 p-2 bg-red-500 text-white rounded"
-            >Save Team</button>
-          
-          <div>
-            <h2>Select a Saved Team</h2>
-            <select
-              value={teamId}
-              onChange={(e) => setId(e.target.value)}
-              className="p-2 border border-gray-300 rounded">
-              <option value="">Select a team...</option>
-              {teamSaved.map((savedTeam) => (
-                <option key={savedTeam.id} value={savedTeam.id}>
-                  {savedTeam.id}
-                </option>
-              ))}
-            </select>
+              onClick={teamLoad}
+              className="px-4 py-2 bg-[#ee1515] text-white rounded-lg opacity-40 hover:opacity-100 transition-all duration-300"
+            >
+              Load Team
+            </button>
 
             {teamId && (
               <button
                 onClick={() => teamDelete(teamId)}
-                className="mt-2 p-2 bg-red-500 text-white rounded">
+                className="px-4 py-2 bg-[#ee1515] text-white rounded-lg opacity-40 hover:opacity-100 transition-all duration-300"
+              >
                 Delete Team
               </button>
             )}
-          </div>
-            <button
-              onClick={teamLoad}
-              className="mt-2 p-2 bg-red-500 text-white rounded"
-            >Load Team</button>
           </div>
         </div>
       </div>
