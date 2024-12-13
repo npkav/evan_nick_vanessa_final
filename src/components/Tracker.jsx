@@ -117,19 +117,29 @@ const Tracker = () => {
   });
 
   return (
-    <div className="p-5 bg-[#f0f0f0] min-h-screen flex flex-col items-center">
-      <h1 className="text-3xl font-bold text-[#ee1515] mb-5">PokéTracker</h1>
-      <input
-        type="text"
-        placeholder="Enter Pokémon Name"
-        value={pokemonName}
-        onChange={(e) => setPokemonName(e.target.value)}
-        className="w-full max-w-md p-2 border-2 border-[#222224] rounded-md mb-4 text-lg focus:border-[#ee1515] focus:outline-none"
-      />
+    <div className="w-full max-w-4xl p-6 my-8 bg-[#f0f0f0] rounded-lg border-2 border-[#222224] relative mt-28">
+      <h1 className="text-3xl font-bold text-[#222224] mb-5">PokéTracker</h1>
+      
+      <div className="flex gap-2 mb-4">
+        <input
+          type="text"
+          placeholder="Enter Pokémon Name"
+          value={pokemonName}
+          onChange={(e) => setPokemonName(e.target.value)}
+          className="p-2 border rounded-lg flex-1"
+        />
+        <button
+          onClick={fetchPokemon}
+          className="px-4 py-2 bg-[#ee1515] text-white rounded-lg disabled:opacity-0 w-[120px] opacity-40 hover:opacity-100 transition-all duration-300 active:scale-95 transform"
+        >
+          Search
+        </button>
+      </div>
+
       <select
         value={selectedGeneration || ''}
         onChange={(e) => setSelectedGeneration(Number(e.target.value))}
-        className="w-full max-w-md p-2 border-2 rounded-md mb-4"
+        className="w-full p-2 border rounded-lg mb-4"
       >
         <option value="">All Generations</option>
         {generations.map((gen) => (
@@ -138,16 +148,12 @@ const Tracker = () => {
           </option>
         ))}
       </select>
-      <button
-        onClick={fetchPokemon}
-        className="px-6 py-2 border-none rounded-md bg-[#ee1515] text-white text-lg cursor-pointer transition duration-300 ease-in-out hover:bg-[#ee1515]/80"
-      >
-        Search
-      </button>
+
       {error && <p className="text-[#222224] mt-4">{error}</p>}
-      <div className="w-full max-w-4xl mt-8">
+      
+      <div className="mt-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold text-[#ee1515]">Encounters</h2>
+          <h2 className="text-2xl font-semibold text-[#222224]">Encounters</h2>
           {Object.keys(encounterData).length > 0 && (
             <button
               onClick={clearData}
@@ -157,22 +163,28 @@ const Tracker = () => {
             </button>
           )}
         </div>
-        {Object.keys(encounterData).length === 0 && <p className="text-[#222224]">No encounter data available.</p>}
+        
+        {Object.keys(encounterData).length === 0 && (
+          <p className="text-[#222224]">No encounter data available.</p>
+        )}
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedGames.map(([game, locations], idx) => (
-            <div key={idx} className="mb-6">
-              <h3 className="text-lg font-bold mb-2">{game}</h3>
+            <div key={idx} className="bg-white p-4 rounded-lg">
+              <h3 className="text-lg font-bold mb-3 text-[#ee1515]">{game}</h3>
               {locations.map((loc, locIdx) => (
-                <div key={locIdx} className="mb-4 pl-4">
-                  <p className="font-medium">Location: {capitalize(loc.location.replace(/-/g, ' '))}</p>
-                  <ul className="list-disc ml-4">
+                <div key={locIdx} className="mb-4">
+                  <p className="font-medium text-[#222224]">
+                    {capitalize(loc.location.replace(/-/g, ' '))}
+                  </p>
+                  <ul className="mt-2 space-y-2">
                     {[...new Set(loc.details.map((d) => JSON.stringify(d)))].map((detailStr, detIdx) => {
                       const detail = JSON.parse(detailStr);
                       return (
-                        <li key={detIdx}>
-                          <p>Chance: {detail.chance}%</p>
-                          <p>Method: {capitalize(detail.method.replace(/-/g, ' '))}</p>
-                          <p>Levels: {detail.levels}</p>
+                        <li key={detIdx} className="bg-[#f8f8f8] p-2 rounded">
+                          <p className="text-sm">Chance: {detail.chance}%</p>
+                          <p className="text-sm">Method: {capitalize(detail.method.replace(/-/g, ' '))}</p>
+                          <p className="text-sm">Levels: {detail.levels}</p>
                         </li>
                       );
                     })}
