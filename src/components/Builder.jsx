@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {capitalize} from './Capitalize';
 
+// Please note that for the JSON server, you must use the default port of 3000 as the code was written with this intent.
+
 import bugIcon from '../assets/types/bug_icon.png'
 import darkIcon from '../assets/types/dark_icon.png'
 import dragonIcon from '../assets/types/dragon_icon.png'
@@ -44,10 +46,48 @@ const Builder = () => {
     }
   };
 
+  // We use PATCH instead of DELETE since we are modifying existing data and not deleting the entire team.
   const removeTeam = (index) => {
-    setTeam(team.filter((_, i) => i !== index))
+    if (teamId) {
+      const accessedTeam = teamSaved.find((savedTeam) => savedTeam.id === teamId);
+  
+      if (accessedTeam) {
+        const updatedTeam = accessedTeam.team.filter((_, i) => i !== index);
+  
+        fetch(`http://localhost:3000/teams/${teamId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ team: updatedTeam }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Failed to update team on server');
+            }
+            setSaved(
+              teamSaved.map((savedTeam) =>
+                savedTeam.id === teamId
+                  ? { ...savedTeam, team: updatedTeam }
+                  : savedTeam
+              )
+            );
+            setTeam(updatedTeam);
+            setWarn('Pokémon successfully removed from the accessed team!');
+          })
+          .catch((error) => {
+            setWarn('Error updating team on server. Please try again!');
+            console.error('Error:', error);
+          });
+      } else {
+        setWarn('No accessed team found!');
+      }
+    } else {
+      setTeam(team.filter((_, i) => i !== index));
+      setWarn('Pokémon removed from the active team!');
+    }
   };
-
+  
   const shinyToggle = (index) => {
     setTeam(team.map((pokemon, i) => {
       if (i === index) {
@@ -76,7 +116,7 @@ const Builder = () => {
   }, [teamSearch]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/teams')
+    fetch('http://localhost:3000/teams')
       .then((response) => response.json())
       .then((data) => {
         setSaved(data)
@@ -119,7 +159,7 @@ const Builder = () => {
       return;
     }
 
-    fetch('http://localhost:5000/teams')
+    fetch('http://localhost:3000/teams')
     .then((response) => response.json())
     .then((data) => {
       const nextId = data.length > 0 ? `team ${data.length + 1}` : "team 1"
@@ -129,7 +169,7 @@ const Builder = () => {
       };
 
 
-      fetch('http://localhost:5000/teams', {
+      fetch('http://localhost:3000/teams', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -166,6 +206,33 @@ const Builder = () => {
     } else {
       setWarn('Team not found!')
     }
+  };
+
+  const teamDelete = (id) => {
+    fetch(`http://localhost:3000/teams/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to delete team on server');
+        }
+        setSaved(teamSaved.filter((savedTeam) => savedTeam.id !== id));
+  
+        if (id === teamId) {
+          setTeam([]);
+          setId('');
+          setWarn('The selected team was deleted, and the current team was cleared.');
+        } else {
+          setWarn('Team deleted successfully!');
+        }
+      })
+      .catch((error) => {
+        setWarn('Error deleting team on server. Please try again!');
+        console.error('Error:', error);
+      });
   };
 
   return (
@@ -271,9 +338,7 @@ const Builder = () => {
             <select
               value={teamId}
               onChange={(e) => setId(e.target.value)}
-              className="p-2 border border-gray-300 rounded"
-            >
-
+              className="p-2 border border-gray-300 rounded">
               <option value="">Select a team...</option>
               {teamSaved.map((savedTeam) => (
                 <option key={savedTeam.id} value={savedTeam.id}>
@@ -281,8 +346,15 @@ const Builder = () => {
                 </option>
               ))}
             </select>
-          </div>
 
+            {teamId && (
+              <button
+                onClick={() => teamDelete(teamId)}
+                className="mt-2 p-2 bg-red-500 text-white rounded">
+                Delete Team
+              </button>
+            )}
+          </div>
             <button
               onClick={teamLoad}
               className="mt-2 p-2 bg-red-500 text-white rounded"
