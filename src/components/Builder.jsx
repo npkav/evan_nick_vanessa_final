@@ -195,7 +195,7 @@ const Builder = () => {
 
     if (teamSelect) {
       setTeam(teamSelect.team)
-      setWarn(`Team ${teamId} successfully loaded!`)
+      setWarn(`${capitalize(teamId)} successfully loaded!`);
     } else {
       setWarn('Team not found!')
     }
